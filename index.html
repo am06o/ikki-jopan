@@ -54,7 +54,7 @@ main#desk{flex:1;min-width:0;background:var(--desk);overflow:auto;position:relat
 #pages{position:absolute;left:0;top:0}
 .pg{position:absolute;top:0;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .pn{position:absolute;line-height:1;white-space:nowrap;user-select:none;pointer-events:none}
-#ed{position:absolute;outline:0;column-fill:auto;orphans:1;widows:1;overflow-wrap:anywhere;caret-color:var(--acc)}
+#ed{position:absolute;outline:0;column-fill:auto;text-justify:inter-character;orphans:1;widows:1;overflow-wrap:anywhere;caret-color:var(--acc)}
 #ed .p{margin:0;position:relative}
 #ed .p[data-pb]{border-bottom:1.5px dashed color-mix(in srgb,var(--acc) 55%,transparent);padding-bottom:4px}
 .marks #ed .p:not(.e)::after,.marks #ed .p.e::before{content:'\21B5';color:var(--acc);opacity:.55;font:400 .8em system-ui,sans-serif;font-style:normal;margin-left:2px;user-select:none;pointer-events:none}
@@ -207,7 +207,8 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   <div class="dbody">
     <div class="sec"><div class="sech"><span style="flex:1">양식</span><button class="ib" id="addStyle" aria-label="양식 추가" title="양식 추가" data-i="plus"></button></div><div id="styleRows"></div></div>
     <div class="sec" style="border-top:1px solid var(--line);padding-top:16px">
-      <div class="sech">출력</div>
+      <div class="sech">글자와 출력</div>
+      <div class="row" style="gap:4px;height:40px" title="자간"><span style="flex:1;font-size:13px;color:#3F3F46">자간</span><button class="ib sm" id="lsDown" aria-label="자간 줄이기" data-i="chevL"></button><input class="num" id="lsNum" inputmode="decimal" aria-label="자간"><span class="unit">%</span><button class="ib sm" id="lsUp" aria-label="자간 늘리기" data-i="chevR"></button></div>
       <div class="row" style="gap:8px;height:40px"><span style="flex:1;font-size:13px;color:#3F3F46">가로 픽셀</span><input class="num field" id="outW" inputmode="numeric" style="width:70px"><span class="unit">px</span></div>
       <div class="row" style="gap:8px;height:40px"><span style="flex:1;font-size:13px;color:#3F3F46">줄 나눔</span><div class="segx" id="brkSeg"><button data-v="word">어절</button><button data-v="char">글자</button></div></div>
     </div>
@@ -296,18 +297,18 @@ fillIcons(document);
 
 /* ---------- 상태 ---------- */
 const KEY='manuscript-setter-v1';
-const DEF={size:10,lh:190,para:0,margin:10,ratio:2,rmode:'2',crW:'1',crH:'2.4',paper:'white',custom:'#E9E4D8',font:'KoPubWorld Batang',
+const DEF={size:10,lh:190,para:0,margin:10,ls:0,ratio:2,rmode:'2',crW:'1',crH:'2.4',paper:'white',custom:'#E9E4D8',font:'KoPubWorld Batang',
   pn:{on:true,size:7,fmt:'slash',pos:'bc',font:'base'},marks:true,outW:1440,brk:'word',zoom:100};
 const DEFSTY=[
   {id:'title',name:'제목',font:'base',size:170,bold:true,italic:false,align:'right',op:100,lh:145},
   {id:'meta',name:'머리말',font:'base',size:80,bold:false,italic:false,align:'right',op:55},
-  {id:'body',name:'본문',font:'base',size:100,bold:false,italic:false,align:'left',op:100},
+  {id:'body',name:'본문',font:'base',size:100,bold:false,italic:false,align:'justify',op:100},
   {id:'sign',name:'서명',font:'base',size:90,bold:false,italic:false,align:'right',op:75},
-  {id:'note',name:'주석',font:'base',size:85,bold:false,italic:true,align:'left',op:60}];
+  {id:'note',name:'주석',font:'base',size:85,bold:false,italic:true,align:'justify',op:60}];
 const BUILTIN_FONTS=[{id:'KoPubWorld Batang',name:'KoPub 바탕'},{id:'KoPubWorld Dotum',name:'KoPub 돋움'}];
 let S,STY,TITLE,LOCALF,UPF=[];
 try{const d=JSON.parse(localStorage.getItem(KEY)||'null');S={...DEF,...(d&&d.S||{})};S.pn={...DEF.pn,...(d&&d.S&&d.S.pn||{})};
-  STY=d&&Array.isArray(d.STY)&&d.STY.length?d.STY:JSON.parse(JSON.stringify(DEFSTY));TITLE=d&&d.title||'새 원고';LOCALF=d&&d.localFonts||[];var SAVEDHTML=d&&d.html||''}
+  STY=d&&Array.isArray(d.STY)&&d.STY.length?d.STY:JSON.parse(JSON.stringify(DEFSTY));if(d&&!(d.ver>=2))STY.forEach(x=>{if((x.id==='body'||x.id==='note')&&x.align==='left')x.align='justify'});TITLE=d&&d.title||'새 원고';LOCALF=d&&d.localFonts||[];var SAVEDHTML=d&&d.html||''}
 catch(e){S={...DEF,pn:{...DEF.pn}};STY=JSON.parse(JSON.stringify(DEFSTY));TITLE='새 원고';LOCALF=[];var SAVEDHTML=''}
 const fonts=()=>[...BUILTIN_FONTS,...LOCALF.map(n=>({id:n,name:n,local:true})),...UPF.map(f=>({id:f.id,name:f.name,up:true}))];
 const fontName=id=>(fonts().find(f=>f.id===id)||{name:id}).name;
@@ -361,7 +362,7 @@ const styleTag=document.createElement('style');document.head.append(styleTag);
 function applyCSS(){
   const g=geo(),[bg,fg]=paperCols(),fs=S.size*0.3528*g.mm;
   Object.assign(ed.style,{left:g.mx+'px',top:g.my+'px',width:g.cw+'px',height:g.ch+'px',columnWidth:g.cw+'px',columnGap:(2*g.mx+PG)+'px',
-    fontFamily:famCss(S.font),fontSize:fs+'px',lineHeight:S.lh/100,color:fg,wordBreak:S.brk==='word'?'keep-all':'normal'});
+    fontFamily:famCss(S.font),fontSize:fs+'px',lineHeight:S.lh/100,letterSpacing:(S.ls/100)+'em',color:fg,wordBreak:S.brk==='word'?'keep-all':'normal'});
   const pg=(S.para/100*S.lh/100).toFixed(3);
   styleTag.textContent='#ed .p{margin-bottom:'+pg+'em}'+STY.map(s=>'#ed .p[data-s="'+s.id+'"]{font-family:'+(s.font==='base'?'inherit':famCss(s.font))+';font-size:'+s.size+'%;font-weight:'+(s.bold?700:400)+';font-style:'+(s.italic?'italic':'normal')+';text-align:'+s.align+';opacity:'+s.op/100+(s.lh?';line-height:'+s.lh/100:'')+'}').join('')
     +['left','center','right','justify'].map(a=>'#ed .p[data-a="'+a+'"]{text-align:'+a+'}').join('')
@@ -392,7 +393,7 @@ function refresh(){applyCSS();relayout();syncUI();save()}
 /* ---------- 저장 ---------- */
 let saveT;
 function save(){clearTimeout(saveT);$('#saved').textContent='저장 중';saveT=setTimeout(()=>{
-  try{localStorage.setItem(KEY,JSON.stringify({S,STY,title:$('#docTitle').value,html:ed.innerHTML,localFonts:LOCALF}));$('#saved').innerHTML=svg('check')+'저장됨'}
+  try{localStorage.setItem(KEY,JSON.stringify({ver:2,S,STY,title:$('#docTitle').value,html:ed.innerHTML,localFonts:LOCALF}));$('#saved').innerHTML=svg('check')+'저장됨'}
   catch(e){$('#saved').textContent='';toast('저장 실패',()=>save(),'재시도')}},400)}
 
 /* ---------- 되돌리기 ---------- */
@@ -588,10 +589,10 @@ function renderStyles(){
     +'<div class="row" style="gap:8px"><span class="lab">글꼴</span><button class="dd" data-act="font" style="flex:1"><span>'+esc(s.font==='base'?'기본 글꼴':fontName(s.font))+'</span>'+svg('chevD')+'</button></div>'
     +'<div class="row" style="gap:4px"><span class="lab" style="margin-right:4px">크기</span><button class="ib sm" data-act="down" aria-label="크기 줄이기">'+svg('chevL')+'</button><input class="num" data-k="size" value="'+s.size+'" inputmode="decimal"><span class="unit" style="width:auto">%</span><button class="ib sm" data-act="up" aria-label="크기 늘리기">'+svg('chevR')+'</button><div style="flex:1"></div>'
     +'<button class="ib'+(s.bold?' on':'')+'" data-act="bold" aria-label="굵게" title="굵게">'+svg('bold')+'</button><button class="ib'+(s.italic?' on':'')+'" data-act="italic" aria-label="기울임" title="기울임">'+svg('italic')+'</button></div>'
-    +'<div class="row" style="gap:4px"><span class="lab" style="margin-right:4px">정렬</span>'+AL.slice(0,3).map(a=>'<button class="ib'+(s.align===a[0]?' on':'')+'" data-act="al" data-v="'+a[0]+'" aria-label="'+a[1]+'" title="'+a[1]+'">'+svg(a[2])+'</button>').join('')+'</div>'
+    +'<div class="row" style="gap:4px"><span class="lab" style="margin-right:4px">정렬</span>'+AL.map(a=>'<button class="ib'+(s.align===a[0]?' on':'')+'" data-act="al" data-v="'+a[0]+'" aria-label="'+a[1]+'" title="'+a[1]+'">'+svg(a[2])+'</button>').join('')+'</div>'
     +'<div class="row" style="gap:8px"><span class="lab">진하기</span><input type="range" min="20" max="100" step="5" data-k="op" value="'+s.op+'" style="flex:1;accent-color:var(--acc)"><span style="width:40px;text-align:right;font-size:13px">'+s.op+'%</span></div>'
     +(DEFSTY.some(d=>d.id===s.id)?'':'<button class="ib" data-act="del" aria-label="양식 삭제" title="양식 삭제" style="align-self:flex-end;color:#B42318">'+svg('trash')+'</button>')+'</div></div>'}).join('');
-  $('#outW').value=S.outW;$$('#brkSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.brk))}
+  $('#outW').value=S.outW;$('#lsNum').value=S.ls;$$('#brkSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.brk))}
 $('#styleRows').addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const row=b.closest('.srow'),s=STY.find(x=>x.id===row.dataset.id);if(!s)return;const a=b.dataset.act;
   if(a==='toggle'){openRow=openRow===s.id?null:s.id;renderStyles();return}
   if(a==='font'){fontMenu(b,s.font,true,id=>{s.font=id;refresh();renderStyles()});return}
@@ -604,6 +605,10 @@ $('#styleRows').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)re
   if(k==='op'){s.op=+e.target.value;e.target.nextElementSibling.textContent=s.op+'%';refresh();return}});
 $('#styleRows').addEventListener('change',e=>{if(e.target.dataset.k==='size'){const s=STY.find(x=>x.id===e.target.closest('.srow').dataset.id);const n=parseFloat(e.target.value);if(!isNaN(n))s.size=Math.min(300,Math.max(30,n));refresh();renderStyles()}});
 $('#addStyle').onclick=()=>{let n=1;while(STY.some(s=>s.id==='c'+n))n++;const s={id:'c'+n,name:'새 양식',font:'base',size:100,bold:false,italic:false,align:'left',op:100};STY.push(s);openRow=s.id;refresh();renderStyles();renderBubble()};
+const lsClamp=x=>Math.min(50,Math.max(-50,Math.round(x)));
+$('#lsDown').onclick=()=>{S.ls=lsClamp(S.ls-1);refresh();$('#lsNum').value=S.ls};$('#lsUp').onclick=()=>{S.ls=lsClamp(S.ls+1);refresh();$('#lsNum').value=S.ls};
+$('#lsNum').addEventListener('change',e=>{const n=parseFloat(e.target.value);if(!isNaN(n))S.ls=lsClamp(n);e.target.value=S.ls;refresh()});
+$('#lsNum').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
 $('#outW').addEventListener('change',e=>{const n=parseInt(e.target.value);if(n>=320&&n<=4096)S.outW=n;e.target.value=S.outW;save()});
 $('#brkSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(b){S.brk=b.dataset.v;refresh();renderStyles()}});
 
@@ -631,18 +636,32 @@ async function renderPages(outW,which){
   const buckets=pr.map(()=>[]);const cache=new Map();const range=document.createRange();
   const styleOf=el=>{let s=cache.get(el);if(s)return s;const cs=getComputedStyle(el);let op=1,n=el;
     while(n&&n!==document.body){op*=parseFloat(getComputedStyle(n).opacity);n=n.parentElement}
-    s={font:cs.fontStyle+' '+cs.fontWeight+' ',size:parseFloat(cs.fontSize),fam:cs.fontFamily,color:cs.color,op};cache.set(el,s);return s};
-  const take=root=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
+    s={font:cs.fontStyle+' '+cs.fontWeight+' ',size:parseFloat(cs.fontSize),fam:cs.fontFamily,color:cs.color,op,ls:parseFloat(cs.letterSpacing)||0};cache.set(el,s);return s};
+  const NATIVE=window.CSS&&CSS.supports&&CSS.supports('text-justify','inter-character');
+  const take=(root,isEd)=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
     while(node=w.nextNode()){const t=node.data;if(!t)continue;const st=styleOf(node.parentElement);
-      for(let i=0;i<t.length;){const c=t.codePointAt(i),len=c>0xffff?2:1,ch=t.substr(i,len);
-        if(!/\s/.test(ch)){range.setStart(node,i);range.setEnd(node,i+len);const rs=range.getClientRects();let r=null;for(const x of rs)if(x.width>0){r=x;break}
-          if(r){const cx=(r.left+r.right)/2;let pi=pr.findIndex(p=>cx>=p.left&&cx<p.right);if(pi>=0)buckets[pi].push({ch,x:(r.left-pr[pi].left)/z,y:(r.top-pr[pi].top)/z,h:r.height/z,st})}}
+      const para=isEd&&!NATIVE?paraOf(node):null;const just=para&&getComputedStyle(para).textAlign==='justify'?para:null;
+      for(let i=0;i<t.length;){const c=t.codePointAt(i),len=c>0xffff?2:1,ch=t.substr(i,len),sp=/\s/.test(ch);
+        if(!sp||just){range.setStart(node,i);range.setEnd(node,i+len);const rs=range.getClientRects();let r=null;for(const x of rs)if(x.width>0){r=x;break}
+          if(r){const cx=(r.left+r.right)/2;let pi=pr.findIndex(p=>cx>=p.left&&cx<p.right);if(pi>=0)buckets[pi].push({ch,sp,x:(r.left-pr[pi].left)/z,y:(r.top-pr[pi].top)/z,h:r.height/z,w:r.width/z,st,para:just,pi})}}
         i+=len}}};
-  take(ed);take(pagesEl);
+  take(ed,true);take(pagesEl,false);
+  if(!NATIVE){
+    const mc=document.createElement('canvas').getContext('2d'),spW=new Map();
+    const space=st=>{const f=st.font+st.size+'px '+st.fam;if(!spW.has(f)){mc.font=f;spW.set(f,mc.measureText(' ').width)}return spW.get(f)+st.ls};
+    const lines=new Map();
+    buckets.forEach(b=>b.forEach(gl=>{if(!gl.para)return;let m=lines.get(gl.para);if(!m){m=new Map();lines.set(gl.para,m)}
+      const key=gl.pi+':'+Math.round(gl.y/2);let L=m.get(key);if(!L){L=[];m.set(key,L)}L.push(gl)}));
+    lines.forEach(m=>{const arr=[...m.values()];arr.slice(0,-1).forEach(L=>{
+      while(L.length&&L[L.length-1].sp)L.pop();while(L.length&&L[0].sp)L.shift();if(L.length<2)return;
+      const right=g.mx+g.cw,x0=L[0].x;let tot=0;L.forEach(gl=>tot+=gl.sp?space(gl.st):gl.w);
+      const step=(right-x0-tot)/(L.length-1);if(step<0||step>L[0].st.size)return;let x=x0;
+      L.forEach(gl=>{gl.x=x;x+=(gl.sp?space(gl.st):gl.w)+step})})});
+  }
   const mcache=new Map(),out=[];
   for(const pi of which){const c=document.createElement('canvas');c.width=outW;c.height=H;const x=c.getContext('2d');
     x.fillStyle=bg;x.fillRect(0,0,outW,H);x.textBaseline='alphabetic';
-    for(const gl of buckets[pi]||[]){const st=gl.st,fs=st.size*k,font=st.font+fs+'px '+st.fam;
+    for(const gl of buckets[pi]||[]){if(gl.sp)continue;const st=gl.st,fs=st.size*k,font=st.font+fs+'px '+st.fam;
       if(x.font!==font)x.font=font;let m=mcache.get(font);if(!m){const mm=x.measureText('가Hg');m=(mm.fontBoundingBoxAscent||fs*.88)/((mm.fontBoundingBoxAscent||fs*.88)+(mm.fontBoundingBoxDescent||fs*.12));mcache.set(font,m)}
       x.globalAlpha=st.op;x.fillStyle=st.color;x.fillText(gl.ch,gl.x*k,(gl.y+gl.h*m)*k)}
     x.globalAlpha=1;out.push(c)}
