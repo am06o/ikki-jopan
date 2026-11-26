@@ -24,7 +24,9 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;str
 .dd span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 :focus-visible{outline:2px solid var(--acc);outline-offset:1px}
 #app{height:100%;display:flex;flex-direction:column}
-header.top{height:52px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);flex:none}
+header.top{transition:margin-top .2s ease;height:52px;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line);flex:none}
+body.hidehdr header.top{margin-top:-53px}
+@media (prefers-reduced-motion:reduce){header.top{transition:none}}
 #docTitle{field-sizing:content;min-width:80px;max-width:440px;height:34px;border:0;background:transparent;font-weight:500;font-size:15px;padding:0 8px;border-radius:8px}
 #docTitle:hover{background:#F4F4F5}
 #saved{display:inline-flex;align-items:center;gap:4px;color:var(--soft);font-size:13px;white-space:nowrap}
@@ -102,9 +104,7 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 .tile{flex:1;height:64px;border:1px solid var(--line);border-radius:10px;background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px;color:#3F3F46}
 .tile svg.i{width:22px;height:22px}
 .tile.on{border-color:var(--acc);color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
-.chips{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
-.chips button{height:36px;border-radius:8px;cursor:pointer;font-size:13px;font-variant-numeric:tabular-nums;background:#fff;color:#3F3F46;border:1px solid var(--line)}
-.chips button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
 .info{display:flex;gap:16px;font-size:13px;color:var(--mute)}
 .info span{display:inline-flex;align-items:center;gap:6px}
 .info svg.i{width:16px;height:16px}
@@ -121,8 +121,8 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 .pvseg button.on{background:var(--acc);color:#fff}
 .pvseg .rbox{width:8px;border-width:1.5px}
 #pv100{height:40px;padding:0 12px;border-radius:10px;font-size:13px;cursor:pointer;background:#fff;color:#3F3F46;border:1px solid var(--line);font-variant-numeric:tabular-nums}
-#pvStrip{flex:1;min-height:0;display:flex;align-items:center;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 15%}
-#pvStrip img{height:calc(100% - 40px);max-height:100%;width:auto;flex:none;scroll-snap-align:center;box-shadow:0 2px 10px rgba(0,0,0,.12);border-radius:4px;background:#fff}
+#pvStrip{flex:1;min-height:0;display:flex;align-items:center;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 32px 28px}
+#pvStrip img{width:auto;height:auto;max-height:100%;max-width:calc(100vw - 64px);flex:none;scroll-snap-align:center;box-shadow:0 2px 10px rgba(0,0,0,.12);border-radius:4px;background:#fff}
 #lb{position:fixed;inset:0;z-index:60;background:#000;display:none}
 #lbNav{display:none}
 #lb.open{display:block}
@@ -313,7 +313,7 @@ button.vrow{cursor:pointer}button.vrow:hover{background:#F4F4F5}
   <div class="tiles" role="group" aria-label="형식"><button class="tile" data-f="png"><span data-i="image"></span>PNG</button><button class="tile" data-f="jpg"><span data-i="image"></span>JPG</button><button class="tile" data-f="pdf"><span data-i="file"></span>PDF</button></div>
   <div class="segx" id="pdfSeg" style="padding:3px"><button data-v="split"><span style="display:inline-flex;gap:6px;align-items:center"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="7" height="18" rx="1.5"/><rect x="13" y="3" width="7" height="18" rx="1.5"/></svg>장별</span></button><button data-v="long"><span style="display:inline-flex;gap:6px;align-items:center"><svg class="i" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="20" rx="1.5"/><path d="M10.5 7h3M10.5 11h3M10.5 15h3"/></svg>이어서</span></button></div>
   <div class="segx" id="rangeSeg" style="padding:3px"><button data-v="all">전체</button><button data-v="sel">선택</button></div>
-  <div class="chips" id="chips" role="group" aria-label="장 선택"></div>
+  <input class="field" id="rangeIn" aria-label="저장할 장" placeholder="예: 1-3, 5" autocomplete="off" style="width:100%;height:40px;font-size:14px">
   <div class="info"><span><svg class="i" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/></svg><b id="exCount" style="font-weight:400"></b></span><span><svg class="i" viewBox="0 0 24 24"><path d="M5 3v18M19 3v18M5 12h14"/></svg><b id="exSize" style="font-weight:400"></b></span></div>
   <div class="row" style="gap:8px"><button class="ib" id="exCopy" aria-label="이미지 복사" title="이미지 복사" style="width:44px;height:44px;border:1px solid var(--line)" data-i="copy"></button><button class="pri" id="exGo"><span data-i="download"></span><span id="exGoT">저장</span></button></div>
 </div></dialog>
@@ -790,20 +790,20 @@ const toBlob=(c,type,q)=>new Promise(r=>c.toBlob(r,type,q));
 /* ---------- 내보내기 ---------- */
 const EX={fmt:'png',pdf:'split',range:'all',picked:null};
 const dlg=$('#exportDlg');
-function openExport(){closePops();if(!EX.picked||EX.picked.some(i=>i>=N))EX.picked=[...Array(N).keys()];renderEx();try{dlg.showModal()}catch(e){dlg.setAttribute('open','')}}
+function parseRange(t){const out=new Set();String(t||'').replace(/\s*[-~]\s*/g,'-').split(/[,\s]+/).forEach(x=>{if(!x)return;const m=x.match(/^(\d+)\s*[-~]\s*(\d+)$/);if(m){let a=+m[1],b=+m[2];if(a>b)[a,b]=[b,a];for(let i=a;i<=b;i++)if(i>=1&&i<=N)out.add(i-1)}else if(/^\d+$/.test(x)){const i=+x;if(i>=1&&i<=N)out.add(i-1)}});return[...out].sort((a,b)=>a-b)}
+function openExport(){closePops();if(mobile.matches)ed.blur();$('#rangeIn').placeholder='예: 1-'+Math.min(3,N)+(N>3?', '+N:'');renderEx();try{dlg.showModal()}catch(e){dlg.setAttribute('open','')}}
 function renderEx(){
   $$('.tile').forEach(t=>t.classList.toggle('on',t.dataset.f===EX.fmt));const pdf=EX.fmt==='pdf';
   $('#pdfSeg').style.display=pdf?'flex':'none';$('#rangeSeg').style.display='flex';
   $$('#pdfSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===EX.pdf));$$('#rangeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===EX.range));
-  const chips=$('#chips');chips.style.display=EX.range==='sel'?'grid':'none';
-  chips.innerHTML=[...Array(N).keys()].map(i=>'<button data-i="'+i+'" class="'+(EX.picked.includes(i)?'on':'')+'" aria-pressed="'+EX.picked.includes(i)+'">'+(i+1)+'</button>').join('');
+  $('#rangeIn').style.display=EX.range==='sel'?'block':'none';
   const n=pick().length;$('#exCount').textContent=pdf&&EX.pdf==='long'?'1쪽':n+(pdf?'쪽':'장');
   $('#exSize').textContent=S.outW+' × '+Math.round(S.outW*S.ratio);$('#exCopy').style.display=pdf?'none':'';$('#exGo').disabled=!n}
-const pick=()=>EX.range==='all'?[...Array(N).keys()]:EX.picked.filter(i=>i<N).sort((a,b)=>a-b);
+const pick=()=>EX.range==='all'?[...Array(N).keys()]:parseRange($('#rangeIn').value);
 $$('.tile').forEach(t=>t.onclick=()=>{EX.fmt=t.dataset.f;renderEx()});
 $('#pdfSeg').onclick=e=>{const b=e.target.closest('button');if(b){EX.pdf=b.dataset.v;renderEx()}};
-$('#rangeSeg').onclick=e=>{const b=e.target.closest('button');if(b){EX.range=b.dataset.v;renderEx()}};
-$('#chips').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;EX.picked=EX.picked.includes(i)?EX.picked.filter(x=>x!==i):[...EX.picked,i];renderEx()};
+$('#rangeSeg').onclick=e=>{const b=e.target.closest('button');if(b){EX.range=b.dataset.v;renderEx();if(EX.range==='sel')$('#rangeIn').focus()}};
+$('#rangeIn').addEventListener('input',renderEx);$('#rangeIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('#exGo').disabled)$('#exGo').click()});
 $('#exX').onclick=()=>dlg.close();dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 $('#exportBtn').onclick=openExport;
 const baseName=()=>($('#docTitle').value.trim()||'원고').replace(/[\\/:*?"<>|]/g,'_').slice(0,60);
@@ -817,8 +817,8 @@ $('#exGo').onclick=async()=>{const go=$('#exGo');go.disabled=true;$('#exGoT').te
     else{const type=EX.fmt==='jpg'?'image/jpeg':'image/png',ext=EX.fmt;const blobs=await Promise.all(canv.map(c=>toBlob(c,type,.92)));
       const names=idx.map(i=>nm+'_'+String(i+1).padStart(2,'0')+'.'+ext);
       const files=blobs.map((b,i)=>new File([b],names[i],{type}));
-      if(mobile.matches&&navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files})}catch(err){}}
-      else if(blobs.length===1)download(blobs[0],names[0]);
+      if(blobs.length===1)download(blobs[0],names[0]);
+      else if(mobile.matches){for(let i=0;i<blobs.length;i++){download(blobs[i],names[i]);await new Promise(r=>setTimeout(r,450))}}
       else{const zip=new JSZip();blobs.forEach((b,i)=>zip.file(names[i],b));download(await zip.generateAsync({type:'blob'}),nm+'.zip')}
       if(blobs.some(b=>b.size>5*1024*1024))toast('5MB 넘는 장이 있음 (X 업로드 불가, JPG 권장)')}
     dlg.close()}
@@ -878,6 +878,8 @@ function lockInputs(){const m=mobile.matches;$$('[data-sn],#lsNum,#pnSize,#sgSiz
 function fitMobile(){if(mobile.matches){S.zoom=Math.max(30,Math.floor((desk.clientWidth-24)/PW*100));applyCSS();relayout();syncUI()}}
 mobile.addEventListener('change',()=>{setView('edit');closePops();lockInputs();fitMobile()});
 addEventListener('resize',()=>{if(mobile.matches)fitMobile()});
+let lastY=0;desk.addEventListener('scroll',()=>{const y=desk.scrollTop,d=y-lastY;if(Math.abs(d)<6)return;
+  document.body.classList.toggle('hidehdr',d>0&&y>40);lastY=y},{passive:true});
 desk.addEventListener('mousedown',e=>{if(e.target===desk||e.target===sizer||e.target.classList.contains('pg')){e.preventDefault();ed.focus();const s=getSelection();const r=document.createRange();r.selectNodeContents(ed.lastElementChild);r.collapse(false);s.removeAllRanges();s.addRange(r)}});
 
 /* ---------- 시작 ---------- */
