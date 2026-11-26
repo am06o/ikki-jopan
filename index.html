@@ -62,7 +62,7 @@ main#desk{flex:1;min-width:0;background:var(--desk);overflow:auto;position:relat
 .vbrk{position:absolute;left:0;right:0;border-top:1.5px dashed color-mix(in srgb,var(--acc) 45%,transparent);pointer-events:none}
 
 .marks #ed .p:not(.e)::after,.marks #ed .p.e::before{content:'\21B5';display:inline-block;width:0;overflow:visible;white-space:nowrap;text-indent:2px;color:var(--acc);opacity:.55;font:400 .8em system-ui,sans-serif;font-style:normal;user-select:none;pointer-events:none}
-body #ed.empty .p.e:first-child::before{content:attr(data-ph);color:#A1A1AA;opacity:1;position:absolute;left:0;right:0;white-space:nowrap;pointer-events:none}
+body #ed.empty > .p:first-child::before{content:attr(data-ph)!important;display:inline!important;width:auto!important;text-indent:0!important;font:inherit!important;color:#A1A1AA!important;opacity:1!important;position:absolute;left:0;right:0;white-space:nowrap;pointer-events:none}
 footer.bot{height:30px;flex:none;border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 14px;font-size:12px;color:var(--mute)}
 footer.bot .z{width:40px;text-align:center;font-variant-numeric:tabular-nums}
 .pop{position:fixed;z-index:55;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px;display:none}
@@ -526,7 +526,8 @@ function insertText(text){
 
 /* ---------- 편집기 이벤트 ---------- */
 try{document.execCommand('defaultParagraphSeparator',false,'div')}catch(e){}
-ed.addEventListener('compositionstart',()=>composing=true);
+ed.addEventListener('compositionstart',()=>{composing=true;ed.classList.remove('empty')});
+ed.addEventListener('beforeinput',e=>{if(e.inputType&&e.inputType.startsWith('insert'))ed.classList.remove('empty')});
 ed.addEventListener('compositionend',()=>{composing=false;afterInput()});
 ed.addEventListener('beforeinput',e=>{
   if(e.inputType==='historyUndo'){e.preventDefault();undo()}else if(e.inputType==='historyRedo'){e.preventDefault();redo()}
@@ -534,7 +535,7 @@ ed.addEventListener('beforeinput',e=>{
 
 });
 function afterInput(){if(composing)return;normalize();if(lmode()==='vcont'){clearTimeout(relT);relT=setTimeout(()=>{relayout();syncUI()},180)}else relayout();later();save();syncUI()}
-ed.addEventListener('input',()=>{if(composing){return}afterInput()});
+ed.addEventListener('input',()=>{ed.classList.toggle('empty',!ed.textContent&&ed.children.length<=1&&!composing);if(composing){return}afterInput()});
 ed.addEventListener('paste',e=>{e.preventDefault();insertText((e.clipboardData||window.clipboardData).getData('text/plain')||'')});
 ed.addEventListener('drop',e=>{e.preventDefault();const t=e.dataTransfer.getData('text/plain');if(!t)return;
   const r=document.caretRangeFromPoint?document.caretRangeFromPoint(e.clientX,e.clientY):null;if(r){const s=getSelection();s.removeAllRanges();s.addRange(r)}insertText(t)});
