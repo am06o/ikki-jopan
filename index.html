@@ -58,12 +58,12 @@ main#desk{flex:1;min-width:0;background:var(--desk);overflow:auto;position:relat
 #ed .p{margin:0;position:relative}
 #ed .p[data-pb]{border-bottom:1.5px dashed color-mix(in srgb,var(--acc) 55%,transparent);padding-bottom:4px}
 .marks #ed .p:not(.e)::after,.marks #ed .p.e::before{content:'\21B5';color:var(--acc);opacity:.55;font:400 .8em system-ui,sans-serif;font-style:normal;margin-left:2px;user-select:none;pointer-events:none}
-body #ed.empty .p.e:first-child::before{content:attr(data-ph);color:#A1A1AA;opacity:1;position:absolute;pointer-events:none}
+body #ed.empty .p.e:first-child::before{content:attr(data-ph);color:#A1A1AA;opacity:1;position:absolute;left:0;right:0;white-space:nowrap;pointer-events:none}
 footer.bot{height:30px;flex:none;border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 14px;font-size:12px;color:var(--mute)}
 footer.bot .z{width:40px;text-align:center;font-variant-numeric:tabular-nums}
 .pop{position:fixed;z-index:30;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px;display:none}
 .pop.open{display:block}
-.menu{display:flex;flex-direction:column;padding:6px;min-width:220px}
+.menu{flex-direction:column;padding:6px;min-width:220px}.pop.menu.open{display:flex}
 .mi{display:flex;align-items:center;gap:8px;min-height:38px;padding:0 10px;border:0;border-radius:8px;cursor:pointer;text-align:left;background:transparent;width:100%}
 .mi:hover{background:#F4F4F5}.mi.on{background:#F4F4F5}
 .mi .k{font-size:11px;color:#A1A1AA}
@@ -191,7 +191,7 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   <div class="row" style="justify-content:space-between;padding-top:8px;border-top:1px solid var(--line)">
     <button class="ib" id="pbBtn" aria-label="쪽 나누기" title="쪽 나누기 (Ctrl+Enter)" data-i="pagebreak"></button>
     <button class="ib" id="marksBtn" aria-label="문단 부호" title="문단 부호 보기" data-i="pilcrow"></button>
-    <button class="ib" id="advBtn" aria-label="고급" title="고급" data-i="sliders"></button>
+    <button class="ib" id="advBtn" aria-label="편집" title="편집" data-i="sliders"></button>
   </div>
 </aside>
 <main id="desk">
@@ -202,8 +202,8 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   <div id="pvStrip"></div>
 </div>
 <div id="msheet"><span id="msLabel" style="flex:1;font-size:14px;color:#3F3F46"></span><button class="ib" id="msDown" aria-label="줄이기" data-i="chevL"></button><input class="num" id="msNum" inputmode="decimal"><span class="unit" id="msUnit"></span><button class="ib" id="msUp" aria-label="늘리기" data-i="chevR"></button></div>
-<section id="drawer" aria-label="고급">
-  <div class="dh"><span style="flex:1">고급</span><button class="ib" id="drawerX" aria-label="닫기" title="닫기" data-i="x"></button></div>
+<section id="drawer" aria-label="편집">
+  <div class="dh"><span style="flex:1">편집</span><button class="ib" id="drawerX" aria-label="닫기" title="닫기" data-i="x"></button></div>
   <div class="dbody">
     <div class="sec"><div class="sech"><span style="flex:1">양식</span><button class="ib" id="addStyle" aria-label="양식 추가" title="양식 추가" data-i="plus"></button></div><div id="styleRows"></div></div>
     <div class="sec" style="border-top:1px solid var(--line);padding-top:16px">
@@ -224,7 +224,7 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   <button class="ib" data-ms="para" aria-label="문단 간격" title="문단 간격" data-i="para"></button>
   <button class="ib" id="mAlign" aria-label="정렬" title="정렬" data-i="alignL"></button>
   <button class="ib" id="mPaper" aria-label="종이" title="종이"><span id="mPaperDot" style="width:20px;height:20px;border-radius:50%;border:1px solid #A1A1AA;display:block"></span></button>
-  <button class="ib" id="mAdv" aria-label="고급" title="고급" data-i="sliders"></button>
+  <button class="ib" id="mAdv" aria-label="편집" title="편집" data-i="sliders"></button>
 </nav>
 </div>
 
@@ -563,8 +563,8 @@ $('#fileIn').addEventListener('change',async e=>{const f=e.target.files[0];e.tar
   catch(err){toast('글꼴을 읽지 못함')}fontCb=null});
 
 /* ---------- 팝업 ---------- */
-let openId=null;
-function openPop(id,anchor){closePops(id);const p=$('#'+id);p.classList.add('open');openId=id;
+let openId=null,openAnchor=null;
+function openPop(id,anchor){if(openId===id&&openAnchor===anchor&&$('#'+id).classList.contains('open')){closePops();return}closePops(id);const p=$('#'+id);p.classList.add('open');openId=id;openAnchor=anchor;
   if(id==='popPn'){$('#pnOn').checked=S.pn.on;$('#pnSize').value=S.pn.size;$('#pnFontName').textContent=S.pn.font==='base'?'기본 글꼴':fontName(S.pn.font);syncPn()}
   if(id==='popRatio'){$('#crW').value=S.crW;$('#crH').value=S.crH;syncCr()}
   if(id==='popPaper'){$('#cPick').value=S.custom;$('#cHex').value=S.custom}
@@ -573,10 +573,10 @@ function openPop(id,anchor){closePops(id);const p=$('#'+id);p.classList.add('ope
   let x=a.right+10;if(anchor.closest('#panel'))x=pr.right+8;if(anchor.closest('#drawer'))x=Math.max(8,a.left-p.offsetWidth-8);
   if(x+p.offsetWidth>innerWidth-8)x=Math.max(8,a.left-p.offsetWidth-8);
   p.style.left=x+'px';p.style.top=Math.max(8,Math.min(innerHeight-p.offsetHeight-8,a.top-6))+'px'}
-function closePops(except){$$('.pop.open').forEach(p=>{if(p.id!==except)p.classList.remove('open')});if(!except)openId=null}
-document.addEventListener('mousedown',e=>{if(!e.target.closest('.pop')&&!e.target.closest('[data-keeppop]')&&!e.target.closest('#panel .grp button,#panel .pnbtn,#drawer button')){closePops()}},true);
+function closePops(except){$$('.pop.open').forEach(p=>{if(p.id!==except)p.classList.remove('open')});if(!except){openId=null;openAnchor=null}$('#pnBtn').classList.toggle('on',openId==='popPn')}
+document.addEventListener('pointerdown',e=>{if(!openId)return;const p=$('#'+openId);if(p&&p.contains(e.target))return;if(openAnchor&&openAnchor.contains(e.target))return;closePops()},true);
 
-/* ---------- 고급 (양식) ---------- */
+/* ---------- 편집 (양식) ---------- */
 let openRow=null;
 function openDrawer(){$('#drawer').classList.add('open');renderStyles();if(mobile.matches)$('#panel').classList.remove('open')}
 function closeDrawer(){$('#drawer').classList.remove('open')}
