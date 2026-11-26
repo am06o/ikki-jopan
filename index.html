@@ -4,15 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이끼네 조판기</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src https://cdn.jsdelivr.net https://fonts.gstatic.com data: blob:; img-src 'self' blob: data:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src https://cdn.jsdelivr.net data: blob:; img-src 'self' blob: data:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/css/all.css" integrity="sha384-7bLTAEOU63sqkP/DytZqV+GtomgqCN5FTaQxLNvmBivLqWZWMOD329UogwV0t+aI" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <style>
 :root{--acc:#1F5C3F;--acc-h:#17472F;--acc-t:#E6F0EA;--ink:#18181B;--mute:#52525B;--soft:#71717A;--line:#E4E4E7;--panel:#FAFAFA;--desk:#E9E9EC}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0;height:100%}
-body{font:14px/1.5 'IBM Plex Sans KR',system-ui,sans-serif;color:var(--ink);background:#fff;overflow:hidden}
+body{font:14px/1.5 system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;color:var(--ink);background:#fff;overflow:hidden}
 button,input,select{font:inherit;color:inherit}
 svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
 .ib{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:0;background:transparent;border-radius:7px;cursor:pointer;color:#3F3F46;flex:none;padding:0}
@@ -59,7 +58,7 @@ main#desk{flex:1;min-width:0;background:var(--desk);overflow:auto;position:relat
 #ed .p{margin:0;position:relative}
 .vsheet{position:absolute;left:0;top:0;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .vbrk{position:absolute;left:0;right:0;border-top:1.5px dashed color-mix(in srgb,var(--acc) 45%,transparent);pointer-events:none}
-.vbrk span{position:absolute;right:6px;top:2px;font:500 10px 'IBM Plex Sans KR',sans-serif;color:var(--acc);opacity:.7}
+
 .marks #ed .p:not(.e)::after,.marks #ed .p.e::before{content:'\21B5';display:inline-block;width:0;overflow:visible;white-space:nowrap;text-indent:2px;color:var(--acc);opacity:.55;font:400 .8em system-ui,sans-serif;font-style:normal;user-select:none;pointer-events:none}
 body #ed.empty .p.e:first-child::before{content:attr(data-ph);color:#A1A1AA;opacity:1;position:absolute;left:0;right:0;white-space:nowrap;pointer-events:none}
 footer.bot{height:30px;flex:none;border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 14px;font-size:12px;color:var(--mute)}
@@ -462,7 +461,7 @@ function relayout(){
   if(vert){VB=computeBreaks(g,z);N=VB.length;
     const H=Math.max(g.PH,Math.ceil(g.my*2+ed.offsetHeight));
     const sh=document.createElement('div');sh.className='vsheet';sh.style.cssText='width:'+PW+'px;height:'+H+'px;background:'+paperCols()[0];pagesEl.append(sh);
-    VB.slice(1).forEach((y,i)=>{const d=document.createElement('div');d.className='vbrk';d.style.top=(g.my+y)+'px';d.style.width=PW+'px';const t=document.createElement('span');t.textContent=(i+2)+'장';d.append(t);pagesEl.append(d)});
+    VB.slice(1).forEach((y,i)=>{const d=document.createElement('div');d.className='vbrk';d.style.top=(g.my+y)+'px';d.style.width=PW+'px';pagesEl.append(d)});
     board.style.width=PW+'px';board.style.height=H+'px';board.style.transform='scale('+z+')';sizer.style.width=PW*z+'px';sizer.style.height=H*z+'px';
   }else{
     const br=board.getBoundingClientRect(),last=ed.lastElementChild;let n=1;
