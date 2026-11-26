@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>원고 조판기</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/css/all.css">
+<title>이끼 조판</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src https://cdn.jsdelivr.net https://fonts.gstatic.com data: blob:; img-src 'self' blob: data:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/css/all.css" integrity="sha384-7bLTAEOU63sqkP/DytZqV+GtomgqCN5FTaQxLNvmBivLqWZWMOD329UogwV0t+aI" crossorigin="anonymous">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
 <style>
 :root{--acc:#1F5C3F;--acc-h:#17472F;--acc-t:#E6F0EA;--ink:#18181B;--mute:#52525B;--soft:#71717A;--line:#E4E4E7;--panel:#FAFAFA;--desk:#E9E9EC}
@@ -61,7 +63,7 @@ main#desk{flex:1;min-width:0;background:var(--desk);overflow:auto;position:relat
 body #ed.empty .p.e:first-child::before{content:attr(data-ph);color:#A1A1AA;opacity:1;position:absolute;left:0;right:0;white-space:nowrap;pointer-events:none}
 footer.bot{height:30px;flex:none;border-top:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 14px;font-size:12px;color:var(--mute)}
 footer.bot .z{width:40px;text-align:center;font-variant-numeric:tabular-nums}
-.pop{position:fixed;z-index:30;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px;display:none}
+.pop{position:fixed;z-index:55;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.18);padding:12px;display:none}
 .pop.open{display:block}
 .menu{flex-direction:column;padding:6px;min-width:220px}.pop.menu.open{display:flex}
 .mi{display:flex;align-items:center;gap:8px;min-height:38px;padding:0 10px;border:0;border-radius:8px;cursor:pointer;text-align:left;background:transparent;width:100%}
@@ -108,7 +110,7 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 .info svg.i{width:16px;height:16px}
 .pri{flex:1;height:44px;border:0;border-radius:10px;background:var(--acc);color:#fff;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .pri:disabled{opacity:.6;cursor:default}
-#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#18181B;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;z-index:60;display:none;align-items:center;gap:12px}
+#toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#18181B;color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;z-index:70;display:none;align-items:center;gap:12px}
 #toast.open{display:flex}
 #toast button{border:0;background:transparent;color:#9FE0BC;cursor:pointer;font-weight:600}
 #preview{position:absolute;inset:0;background:var(--desk);z-index:15;display:none;flex-direction:column}
@@ -121,7 +123,7 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 #pv100{height:40px;padding:0 12px;border-radius:10px;font-size:13px;cursor:pointer;background:#fff;color:#3F3F46;border:1px solid var(--line);font-variant-numeric:tabular-nums}
 #pvStrip{flex:1;min-height:0;display:flex;align-items:center;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 15%}
 #pvStrip img{height:calc(100% - 40px);max-height:100%;width:auto;flex:none;scroll-snap-align:center;box-shadow:0 2px 10px rgba(0,0,0,.12);border-radius:4px;background:#fff}
-#lb{position:fixed;inset:0;z-index:50;background:#000;display:none}
+#lb{position:fixed;inset:0;z-index:60;background:#000;display:none}
 #lb.open{display:block}
 #lbStrip{position:absolute;inset:0;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory}
 #lbStrip div{flex:none;width:100vw;height:100%;scroll-snap-align:center;display:flex;align-items:center;justify-content:center}
@@ -129,7 +131,8 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 .lbtop{position:absolute;left:0;right:0;top:0;height:60px;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top) 8px 0;background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,0))}
 .lbtop button{width:44px;height:44px;border:0;border-radius:22px;background:rgba(0,0,0,.45);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .lbtop span{color:#fff;font-size:14px;font-variant-numeric:tabular-nums;padding:0 12px}
-#mbar,#msheet{display:none}
+#mbar{display:none}.monly{display:none!important}
+.mchip{display:inline-flex;align-items:center;gap:2px;height:36px;padding:0 6px 0 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:13px;flex:none;white-space:nowrap}
 #fileIn{display:none}
 @media (max-width:760px){
   header.top{padding:0 6px 0 10px;gap:4px}
@@ -137,21 +140,23 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   #saved,.hdesk{display:none}
   .vt{display:inline-flex}
   #exportBtn{background:transparent;color:var(--acc);width:44px;height:44px;margin:0}
-  aside#panel{position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom));max-height:65vh;z-index:40;border:0;border-radius:16px 16px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.16);background:#fff;display:none;padding-bottom:16px}
-  aside#panel.open{display:flex}
-  footer.bot{display:none}
-  #mbar{display:flex;flex:none;height:60px;border-top:1px solid var(--line);justify-content:space-around;align-items:center;padding:0 6px env(safe-area-inset-bottom)}
-  #mbar .ib{width:44px;height:44px}
-  #msheet.open{display:flex;position:absolute;left:12px;right:12px;bottom:8px;z-index:12;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,.1);padding:6px 8px 6px 16px;align-items:center;gap:4px}
-  #msheet .num{width:52px;height:38px;border-color:var(--line);font-size:15px}
-  #msheet .ib{width:44px;height:44px}
-  #sizer{margin:14px 12px}
-  #drawer{width:100%}
-  .pop{left:0!important;right:0;bottom:0;top:auto!important;border-radius:16px 16px 0 0;padding-bottom:calc(16px + env(safe-area-inset-bottom))}
-  .pop.menu{min-width:0}
-  #bubble{display:none!important}
+  aside#panel,footer.bot,#bubble{display:none!important}
+  #mbar{display:flex;flex:none;height:50px;border-bottom:1px solid var(--line);align-items:center;gap:2px;padding:0 6px;overflow-x:auto;scrollbar-width:none}
+  #mbar .ib{width:40px;height:40px}
+  #mbar .ib.on{background:var(--acc-t);color:var(--acc)}
   .viewing #mbar{display:none}
+  .monly{display:flex!important}
+  #mMore .step,#mMore .grp{padding:0;border:0}
+  #mMore #ratios{justify-content:flex-start;gap:8px}
+  #mMore #tools{border:0;justify-content:flex-start;gap:8px;padding:0}
+  #mMore #advBtn{display:none}
+  #mMore .ib{width:40px;height:40px}
+  #sizer{margin:14px 12px}
+  #drawer{position:fixed;inset:0;width:100%;z-index:45}
+  .pop{max-width:calc(100vw - 16px)}
+  .pop.menu{min-width:200px}
 }
+
 </style>
 </head>
 <body>
@@ -169,6 +174,16 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   <button class="ib hdesk" id="redoBtn" aria-label="다시 실행" title="다시 실행 (Ctrl+Shift+Z)" data-i="redo"></button>
   <button id="exportBtn" aria-label="내보내기" title="내보내기" data-i="download"></button>
 </header>
+<nav id="mbar" aria-label="서식">
+  <button class="mchip" id="mStyle" aria-label="양식" title="양식"><span id="mStyleName">본문</span><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg></button>
+  <button class="ib" id="mFont" aria-label="글꼴" title="글꼴" data-i="type"></button>
+  <button class="ib" data-ms="size" aria-label="크기" title="크기" data-i="size"></button>
+  <button class="ib" data-ms="lh" aria-label="줄 간격" title="줄 간격" data-i="lh"></button>
+  <button class="ib" data-ms="para" aria-label="문단 간격" title="문단 간격" data-i="para"></button>
+  <button class="ib" id="mAlign" aria-label="정렬" title="정렬" data-i="alignJ"></button>
+  <button class="ib" id="mPaper" aria-label="종이" title="종이"><span id="mPaperDot" style="width:20px;height:20px;border-radius:50%;border:1px solid #A1A1AA;display:block"></span></button>
+  <button class="ib" id="mAdv" aria-label="편집" title="편집" data-i="sliders"></button>
+</nav>
 <div class="body">
 <aside id="panel" role="toolbar" aria-label="서식" aria-orientation="vertical">
   <div class="grp">
@@ -188,7 +203,7 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
     <button class="pnbtn" id="pnBtn" aria-label="장 번호"><span data-i="hash"></span><span style="flex:1;text-align:left;font-size:13px">장 번호</span><span id="pnSum" style="font-size:12px;color:var(--soft)"></span><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px;color:var(--soft)"><path d="m9 18 6-6-6-6"/></svg></button>
   </div>
   <div style="flex:1"></div>
-  <div class="row" style="justify-content:space-between;padding-top:8px;border-top:1px solid var(--line)">
+  <div class="row" id="tools" style="justify-content:space-between;padding-top:8px;border-top:1px solid var(--line)">
     <button class="ib" id="pbBtn" aria-label="쪽 나누기" title="쪽 나누기 (Ctrl+Enter)" data-i="pagebreak"></button>
     <button class="ib" id="marksBtn" aria-label="문단 부호" title="문단 부호 보기" data-i="pilcrow"></button>
     <button class="ib" id="advBtn" aria-label="편집" title="편집" data-i="sliders"></button>
@@ -201,10 +216,10 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
   <div class="pvbar"><div class="pvseg" role="group" aria-label="비율" id="pvRatios"></div><div style="flex:1"></div><button id="pv100" aria-label="실제 크기로 보기" title="실제 크기로 보기">100%</button></div>
   <div id="pvStrip"></div>
 </div>
-<div id="msheet"><span id="msLabel" style="flex:1;font-size:14px;color:#3F3F46"></span><button class="ib" id="msDown" aria-label="줄이기" data-i="chevL"></button><input class="num" id="msNum" inputmode="decimal"><span class="unit" id="msUnit"></span><button class="ib" id="msUp" aria-label="늘리기" data-i="chevR"></button></div>
 <section id="drawer" aria-label="편집">
   <div class="dh"><span style="flex:1">편집</span><button class="ib" id="drawerX" aria-label="닫기" title="닫기" data-i="x"></button></div>
   <div class="dbody">
+    <div class="sec monly" id="mMore"><div class="sech">쪽</div></div>
     <div class="sec"><div class="sech"><span style="flex:1">양식</span><button class="ib" id="addStyle" aria-label="양식 추가" title="양식 추가" data-i="plus"></button></div><div id="styleRows"></div></div>
     <div class="sec" style="border-top:1px solid var(--line);padding-top:16px">
       <div class="sech">글자와 출력</div>
@@ -218,25 +233,20 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 <footer class="bot"><span id="pageCount">1장</span><span id="charCount">0자</span><div style="flex:1"></div>
   <button class="ib sm" id="zOut" aria-label="축소" title="축소" data-i="minus"></button><span class="z" id="zLabel">100%</span><button class="ib sm" id="zIn" aria-label="확대" title="확대" data-i="plus"></button>
   <button class="ib sm" id="zFit" aria-label="높이 맞춤" title="높이 맞춤" data-i="fit"></button></footer>
-<nav id="mbar" aria-label="서식">
-  <button class="ib" id="mPanel" aria-label="글꼴과 양식" title="글꼴과 양식" data-i="type"></button>
-  <button class="ib" data-ms="size" aria-label="크기" title="크기" data-i="size"></button>
-  <button class="ib" data-ms="lh" aria-label="줄 간격" title="줄 간격" data-i="lh"></button>
-  <button class="ib" data-ms="para" aria-label="문단 간격" title="문단 간격" data-i="para"></button>
-  <button class="ib" id="mAlign" aria-label="정렬" title="정렬" data-i="alignL"></button>
-  <button class="ib" id="mPaper" aria-label="종이" title="종이"><span id="mPaperDot" style="width:20px;height:20px;border-radius:50%;border:1px solid #A1A1AA;display:block"></span></button>
-  <button class="ib" id="mAdv" aria-label="편집" title="편집" data-i="sliders"></button>
-</nav>
+
 </div>
 
 <div class="pop menu" id="popStyle" role="menu" aria-label="양식"></div>
 <div class="pop menu" id="popFont" role="menu" aria-label="글꼴"></div>
+<div class="pop" id="popStep" role="dialog" aria-label="값 조절" style="padding:6px 6px 6px 14px"><div class="row" style="gap:2px"><span id="msLabel" style="font-size:13px;color:#3F3F46;margin-right:6px;white-space:nowrap"></span><button class="ib" id="msDown" aria-label="줄이기" data-i="chevL"></button><input class="num" id="msNum" inputmode="decimal" style="border-color:var(--line)"><span class="unit" id="msUnit"></span><button class="ib" id="msUp" aria-label="늘리기" data-i="chevR"></button></div></div>
+<div class="pop" id="popAlign" role="dialog" aria-label="정렬" style="padding:6px"><div class="row" id="alignsM" style="gap:2px"></div></div>
 <div class="pop" id="popRatio" role="dialog" aria-label="비율 직접 입력">
   <div class="row" style="gap:6px"><input class="num field" id="crW" inputmode="decimal" aria-label="가로 비율" style="width:56px;text-align:center"><span style="color:var(--soft)">:</span><input class="num field" id="crH" inputmode="decimal" aria-label="세로 비율" style="width:56px;text-align:center"><span id="crBox" class="rbox" style="margin-left:8px;width:12px;color:var(--acc)"></span></div>
   <div id="crPx" style="font-size:12px;color:var(--mute);margin-top:8px;font-variant-numeric:tabular-nums;white-space:nowrap"></div>
   <div id="crWarn" style="font-size:12px;color:#B42318;margin-top:4px;white-space:nowrap;display:none">X에서 축소됨 (세로 4096px 초과)</div>
 </div>
-<div class="pop" id="popPaper" role="dialog" aria-label="내 색" style="padding:10px">
+<div class="pop" id="popPaper" role="dialog" aria-label="종이" style="padding:10px">
+  <div class="row monly" id="papersM" style="gap:10px;margin-bottom:10px;padding:2px"></div>
   <div class="row" style="gap:8px"><input type="color" id="cPick" aria-label="색 고르기" style="width:36px;height:34px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff;cursor:pointer"><input class="field" id="cHex" aria-label="색상 코드" maxlength="7" style="width:96px;text-transform:uppercase"></div>
 </div>
 <div class="pop" id="popPn" role="dialog" aria-label="장 번호" style="width:276px">
@@ -264,8 +274,8 @@ dialog::backdrop{background:rgba(10,12,18,.45)}
 <div id="toast" role="status"><span id="toastT"></span><button id="toastB" hidden></button></div>
 <input type="file" id="fileIn" accept=".ttf,.otf,.woff,.woff2">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.2/dist/jszip.min.js" integrity="sha384-DdGlNq+wVXAn83gXqwyeFHB7iyXy6L0rLrNzgDmhKWPjiJLg9vj6qosYmZmkMfQ+" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@4.2.1/dist/jspdf.umd.min.js" integrity="sha384-qovJwSBbRDPP5cEjCp8S0UP66wrvnjaa60XMOGzTNanrThcrGfXfnZkvgY8N1KT3" crossorigin="anonymous"></script>
 <script>
 {
 /* ---------- 아이콘 ---------- */
@@ -310,10 +320,18 @@ let S,STY,TITLE,LOCALF,UPF=[];
 try{const d=JSON.parse(localStorage.getItem(KEY)||'null');S={...DEF,...(d&&d.S||{})};S.pn={...DEF.pn,...(d&&d.S&&d.S.pn||{})};
   STY=d&&Array.isArray(d.STY)&&d.STY.length?d.STY:JSON.parse(JSON.stringify(DEFSTY));if(d&&!(d.ver>=2))STY.forEach(x=>{if((x.id==='body'||x.id==='note')&&x.align==='left')x.align='justify'});TITLE=d&&d.title||'새 원고';LOCALF=d&&d.localFonts||[];var SAVEDHTML=d&&d.html||''}
 catch(e){S={...DEF,pn:{...DEF.pn}};STY=JSON.parse(JSON.stringify(DEFSTY));TITLE='새 원고';LOCALF=[];var SAVEDHTML=''}
+const cleanName=t=>String(t||'').replace(/[<>"'\\;{}()]/g,'').slice(0,40);
+STY=STY.filter(x=>x&&/^[a-z0-9]{1,12}$/i.test(x.id)).map(x=>({id:x.id,name:cleanName(x.name)||'양식',font:x.font==='base'?'base':cleanName(x.font)||'base',size:Math.min(300,Math.max(30,+x.size||100)),bold:!!x.bold,italic:!!x.italic,align:['left','center','right','justify'].includes(x.align)?x.align:'left',op:Math.min(100,Math.max(20,+x.op||100)),lh:x.lh?Math.min(300,Math.max(80,+x.lh)):undefined}));
+if(!STY.some(x=>x.id==='body'))STY.push(JSON.parse(JSON.stringify(DEFSTY[2])));
+LOCALF=(Array.isArray(LOCALF)?LOCALF:[]).map(cleanName).filter(Boolean);
+if(typeof S.font!=='string')S.font=DEF.font;S.font=S.font.startsWith('up:')?'up:'+cleanName(S.font.slice(3)):cleanName(S.font)||DEF.font;
+if(!/^#[0-9a-fA-F]{6}$/.test(S.custom))S.custom=DEF.custom;if(!['white','ivory','ink','custom'].includes(S.paper))S.paper='white';
+['size','lh','para','margin','ls','outW','zoom','ratio'].forEach(k=>{if(!isFinite(+S[k]))S[k]=DEF[k];S[k]=+S[k]});
 const fonts=()=>[...BUILTIN_FONTS,...LOCALF.map(n=>({id:n,name:n,local:true})),...UPF.map(f=>({id:f.id,name:f.name,up:true}))];
 const fontName=id=>(fonts().find(f=>f.id===id)||{name:id}).name;
-const famCss=id=>'"'+String(id).replace(/["\\]/g,'')+'","KoPubWorld Batang",serif';
+const famCss=id=>'"'+String(id).replace(/["'\\;{}<>()]/g,'')+'","KoPubWorld Batang",serif';
 
+let msKey=null;
 const ed=$('#ed'),board=$('#board'),pagesEl=$('#pages'),sizer=$('#sizer'),desk=$('#desk');
 const PW=420,PG=28;
 let N=1,composing=false,mobile=matchMedia('(max-width:760px)');
@@ -488,9 +506,9 @@ document.addEventListener('selectionchange',()=>{
 const R={size:['크기','pt',0.5,6,16],lh:['줄 간격','%',10,100,300],para:['문단 간격','%',10,0,300],margin:['여백','mm',1,0,30]};
 const clampK=(k,x)=>Math.min(R[k][4],Math.max(R[k][3],Math.round(x*10)/10));
 $('#steppers').innerHTML=Object.keys(R).map(k=>'<div class="step" title="'+R[k][0]+'"><span class="lbl">'+svg(k)+'</span><div style="flex:1"></div><button class="ib sm" data-sd="'+k+'" aria-label="'+R[k][0]+' 줄이기">'+svg('chevL')+'</button><input class="num" data-sn="'+k+'" inputmode="decimal" aria-label="'+R[k][0]+'"><span class="unit">'+R[k][1]+'</span><button class="ib sm" data-su="'+k+'" aria-label="'+R[k][0]+' 늘리기">'+svg('chevR')+'</button></div>').join('');
-$('#steppers').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const k=b.dataset.sd||b.dataset.su;S[k]=clampK(k,S[k]+(b.dataset.sd?-1:1)*R[k][2]);refresh()});
-$('#steppers').addEventListener('change',e=>{const k=e.target.dataset.sn;if(!k)return;const n=parseFloat(e.target.value);if(!isNaN(n))S[k]=clampK(k,n);refresh()});
-$('#steppers').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-sd],[data-su]');if(!b)return;const k=b.dataset.sd||b.dataset.su;S[k]=clampK(k,S[k]+(b.dataset.sd?-1:1)*R[k][2]);refresh()});
+document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.sn;if(!k)return;const n=parseFloat(e.target.value);if(!isNaN(n))S[k]=clampK(k,n);refresh()});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.sn)e.target.blur()});
 const AL=[['left','왼쪽 정렬','alignL'],['center','가운데 정렬','alignC'],['right','오른쪽 정렬','alignR'],['justify','양쪽 정렬','alignJ']];
 $('#aligns').innerHTML=AL.map(a=>'<button class="ib" data-al="'+a[0]+'" aria-label="'+a[1]+'" title="'+a[1]+'">'+svg(a[2])+'</button>').join('');
 $('#aligns').addEventListener('mousedown',e=>e.preventDefault());
@@ -549,7 +567,7 @@ $('#popFont').addEventListener('click',async e=>{const b=e.target.closest('butto
   if(b.dataset.f){fontCb&&fontCb(b.dataset.f);closePops();return}
   if(b.dataset.del){const id=b.dataset.del;LOCALF=LOCALF.filter(x=>x!==id);const u=UPF.find(x=>x.id===id);if(u){UPF=UPF.filter(x=>x!==u);dbDel(u.id)}
     if(S.font===id)S.font=DEF.font;STY.forEach(s=>{if(s.font===id)s.font='base'});if(S.pn.font===id)S.pn.font='base';refresh();closePops();return}
-  if(b.id==='localAdd'){const n=$('#localName').value.trim();if(!n)return;if(!LOCALF.includes(n))LOCALF.push(n);
+  if(b.id==='localAdd'){let n=$('#localName').value.trim();if(!n)return;const n2=cleanName(n);if(!n2)return;n=n2;if(!LOCALF.includes(n))LOCALF.push(n);
     try{await document.fonts.load('16px "'+n+'"')}catch(err){}fontCb&&fontCb(n);closePops();return}
   if(b.id==='upFromMenu'){$('#fileIn').click()}});
 $('#popFont').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='localName')$('#localAdd').click()});
@@ -559,27 +577,28 @@ async function dbPut(rec){try{const d=await db();d.transaction('f','readwrite').
 async function dbDel(id){try{const d=await db();d.transaction('f','readwrite').objectStore('f').delete(id)}catch(e){}}
 async function dbAll(){try{const d=await db();return await new Promise(ok=>{const q=d.transaction('f').objectStore('f').getAll();q.onsuccess=()=>ok(q.result||[]);q.onerror=()=>ok([])})}catch(e){return[]}}
 async function addFontBuf(name,buf){const id='up:'+name;const ff=new FontFace(id,buf);await ff.load();document.fonts.add(ff);if(!UPF.some(f=>f.id===id))UPF.push({id,name});return id}
-$('#fileIn').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const name=f.name.replace(/\.[^.]+$/,'').slice(0,60);
+$('#fileIn').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const name=cleanName(f.name.replace(/\.[^.]+$/,''))||'글꼴';
   try{const buf=await f.arrayBuffer();const id=await addFontBuf(name,buf.slice(0));dbPut({id,name,buf});if(fontCb){fontCb(id)}else{S.font=id;refresh()}closePops()}
   catch(err){toast('글꼴을 읽지 못함')}fontCb=null});
 
 /* ---------- 팝업 ---------- */
 let openId=null,openAnchor=null;
-function openPop(id,anchor){if(openId===id&&openAnchor===anchor&&$('#'+id).classList.contains('open')){closePops();return}closePops(id);const p=$('#'+id);p.classList.add('open');openId=id;openAnchor=anchor;
+function openPop(id,anchor){if(openId===id&&openAnchor===anchor&&$('#'+id).classList.contains('open')){closePops();return}closePops(id);const p=$('#'+id);p.classList.add('open');openId=id;openAnchor=anchor;$$('#mbar .ib,#mStyle').forEach(b=>b.classList.toggle('on',b===anchor));
   if(id==='popPn'){$('#pnOn').checked=S.pn.on;$('#pnSize').value=S.pn.size;$('#pnFontName').textContent=S.pn.font==='base'?'기본 글꼴':fontName(S.pn.font);syncPn()}
   if(id==='popRatio'){$('#crW').value=S.crW;$('#crH').value=S.crH;syncCr()}
   if(id==='popPaper'){$('#cPick').value=S.custom;$('#cHex').value=S.custom}
-  if(mobile.matches){p.style.left='';p.style.top='';return}
+  if(id==='popStep')msSync();
   const a=anchor.getBoundingClientRect(),pr=$('#panel').getBoundingClientRect();
+  if(mobile.matches||anchor.closest('#mbar')){const w=p.offsetWidth,h=p.offsetHeight;let x=Math.max(8,Math.min(innerWidth-w-8,a.left+a.width/2-w/2));let y=a.bottom+6;if(y+h>innerHeight-8)y=Math.max(8,a.top-h-6);p.style.left=x+'px';p.style.top=y+'px';return}
   let x=a.right+10;if(anchor.closest('#panel'))x=pr.right+8;if(anchor.closest('#drawer'))x=Math.max(8,a.left-p.offsetWidth-8);
   if(x+p.offsetWidth>innerWidth-8)x=Math.max(8,a.left-p.offsetWidth-8);
   p.style.left=x+'px';p.style.top=Math.max(8,Math.min(innerHeight-p.offsetHeight-8,a.top-6))+'px'}
-function closePops(except){$$('.pop.open').forEach(p=>{if(p.id!==except)p.classList.remove('open')});if(!except){openId=null;openAnchor=null}$('#pnBtn').classList.toggle('on',openId==='popPn')}
+function closePops(except){$$('.pop.open').forEach(p=>{if(p.id!==except)p.classList.remove('open')});if(!except){openId=null;openAnchor=null;msKey=null}$('#pnBtn').classList.toggle('on',openId==='popPn');$$('#mbar .ib,#mStyle').forEach(b=>b.classList.toggle('on',!!openAnchor&&b===openAnchor))}
 document.addEventListener('pointerdown',e=>{if(!openId)return;const p=$('#'+openId);if(p&&p.contains(e.target))return;if(openAnchor&&openAnchor.contains(e.target))return;closePops()},true);
 
 /* ---------- 편집 (양식) ---------- */
 let openRow=null;
-function openDrawer(){$('#drawer').classList.add('open');renderStyles();if(mobile.matches)$('#panel').classList.remove('open')}
+function openDrawer(){$('#drawer').classList.add('open');renderStyles()}
 function closeDrawer(){$('#drawer').classList.remove('open')}
 $('#advBtn').onclick=()=>$('#drawer').classList.contains('open')?closeDrawer():openDrawer();
 $('#drawerX').onclick=closeDrawer;
@@ -601,7 +620,7 @@ $('#styleRows').addEventListener('click',e=>{const b=e.target.closest('[data-act
   if(a==='del'){ed.querySelectorAll('.p[data-s="'+CSS.escape(s.id)+'"]').forEach(p=>p.dataset.s='body');STY=STY.filter(x=>x!==s);openRow=null}
   refresh();renderStyles();renderBubble()});
 $('#styleRows').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;const s=STY.find(x=>x.id===e.target.closest('.srow').dataset.id);
-  if(k==='name'){s.name=e.target.value.slice(0,20)||'양식';renderBubble();save();$('#styleRows .srow[data-id="'+CSS.escape(s.id)+'"] .nm').textContent=s.name;syncSelUI();return}
+  if(k==='name'){s.name=cleanName(e.target.value).slice(0,20)||'양식';renderBubble();save();$('#styleRows .srow[data-id="'+CSS.escape(s.id)+'"] .nm').textContent=s.name;syncSelUI();return}
   if(k==='op'){s.op=+e.target.value;e.target.nextElementSibling.textContent=s.op+'%';refresh();return}});
 $('#styleRows').addEventListener('change',e=>{if(e.target.dataset.k==='size'){const s=STY.find(x=>x.id===e.target.closest('.srow').dataset.id);const n=parseFloat(e.target.value);if(!isNaN(n))s.size=Math.min(300,Math.max(30,n));refresh();renderStyles()}});
 $('#addStyle').onclick=()=>{let n=1;while(STY.some(s=>s.id==='c'+n))n++;const s={id:'c'+n,name:'새 양식',font:'base',size:100,bold:false,italic:false,align:'left',op:100};STY.push(s);openRow=s.id;refresh();renderStyles();renderBubble()};
@@ -615,14 +634,14 @@ $('#brkSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(
 /* ---------- 화면 상태 맞추기 ---------- */
 function syncSelUI(){const p=selParas()[0];if(!p)return;const st=STY.find(x=>x.id===p.dataset.s)||STY[0];$('#styleName').textContent=st.name;
   const al=p.dataset.a||st.align;$$('#aligns button').forEach(b=>b.classList.toggle('on',b.dataset.al===al));
-  $('#mAlign').innerHTML=svg(AL.find(a=>a[0]===al)[2])}
+  $('#mAlign').innerHTML=svg(AL.find(a=>a[0]===al)[2]);$$('#alignsM button').forEach(b=>b.classList.toggle('on',b.dataset.al===al));$('#mStyleName').textContent=st.name}
 function syncPn(){$$('#pnFmt button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.pn.fmt));$$('#pnPos .dot').forEach(b=>b.classList.toggle('on',b.dataset.pos===S.pn.pos));$('#pnSize').value=S.pn.size}
 function syncCr(){const r=S.ratio;$('#crBox').style.height=Math.min(40,Math.round(12*r))+'px';$('#crPx').textContent=S.outW+' × '+Math.round(S.outW*r)+' px';$('#crWarn').style.display=S.outW*r>4096?'block':'none'}
 function syncUI(){
-  $$('#steppers [data-sn]').forEach(i=>{if(document.activeElement!==i)i.value=S[i.dataset.sn]});
+  $$('[data-sn]').forEach(i=>{if(document.activeElement!==i)i.value=S[i.dataset.sn]});
   $$('#ratios [data-r]').forEach(b=>b.classList.toggle('on',S.rmode===b.dataset.r));$('#crBtn').classList.toggle('on',S.rmode==='custom');$('#crBtn').title='비율 직접 입력 '+S.crW+':'+S.crH;
   $$('#pvRatios [data-r]').forEach(b=>b.classList.toggle('on',S.rmode===b.dataset.r));
-  $$('#papers .sw').forEach(b=>b.classList.toggle('on',S.paper===b.dataset.p));$('#cSw').classList.toggle('on',S.paper==='custom');$('#cSw span').style.background=S.custom;
+  $$('#papers .sw,#papersM .sw').forEach(b=>b.classList.toggle('on',S.paper===b.dataset.p));$('#cSw').classList.toggle('on',S.paper==='custom');$('#cSw span').style.background=S.custom;
   $('#mPaperDot').style.background=paperCols()[0];
   $('#pnSum').textContent=S.pn.on?pnText(0):'끔';$('#pnBtn').classList.toggle('on',openId==='popPn');
   $('#marksBtn').classList.toggle('on',S.marks);$('#fontName').textContent=fontName(S.font);$('#zLabel').textContent=S.zoom+'%';
@@ -713,9 +732,8 @@ function toast(t,act,label){$('#toastT').textContent=t;const b=$('#toastB');b.hi
   $('#toast').classList.add('open');clearTimeout(toastT);toastT=setTimeout(()=>$('#toast').classList.remove('open'),act?6000:2600)}
 
 /* ---------- 모바일 ---------- */
-let msKey=null;
 function setView(v){document.body.classList.toggle('viewing',v==='view');$('#vEdit').classList.toggle('on',v==='edit');$('#vView').classList.toggle('on',v==='view');$('#preview').classList.toggle('open',v==='view');
-  $('#panel').classList.remove('open');$('#msheet').classList.remove('open');msKey=null;if(v==='view')renderPreview()}
+  closePops();if(v==='view')renderPreview()}
 $('#vEdit').onclick=()=>setView('edit');$('#vView').onclick=()=>setView('view');
 let pvImgs=[];
 async function renderPreview(){const w=Math.min(1080,Math.round(innerWidth*(devicePixelRatio||1)));const cs=await renderPages(w,[...Array(N).keys()]);
@@ -730,26 +748,35 @@ $('#lbStrip').addEventListener('scroll',lbCount,{passive:true});
 function closeLB(){if($('#lb').classList.contains('open')){$('#lb').classList.remove('open')}}
 $('#lbX').onclick=()=>{closeLB();if(history.state&&history.state.lb)history.back()};
 addEventListener('popstate',()=>closeLB());
-$('#mPanel').onclick=()=>{$('#msheet').classList.remove('open');msKey=null;$('#panel').classList.toggle('open')};
-$('#mPaper').onclick=$('#mPanel').onclick;
-$('#mAdv').onclick=()=>{$('#panel').classList.remove('open');openDrawer()};
+$('#mAdv').onclick=()=>{closePops();openDrawer()};
+$('#mStyle').addEventListener('mousedown',e=>e.preventDefault());
+$('#mStyle').onclick=e=>styleMenu(e.currentTarget);
+$('#mFont').onclick=e=>fontMenu(e.currentTarget,S.font,false,id=>{S.font=id;refresh()});
+$('#alignsM').innerHTML=AL.map(a=>'<button class="ib" data-al="'+a[0]+'" aria-label="'+a[1]+'" title="'+a[1]+'" style="width:44px;height:44px">'+svg(a[2])+'</button>').join('');
+$('#alignsM').addEventListener('mousedown',e=>e.preventDefault());
+$('#alignsM').addEventListener('click',e=>{const b=e.target.closest('button');if(b)applyAlign(b.dataset.al)});
 $('#mAlign').addEventListener('mousedown',e=>e.preventDefault());
-$('#mAlign').onclick=()=>{const p=selParas()[0];const st=p&&(STY.find(x=>x.id===p.dataset.s)||STY[0]);const cur=p?(p.dataset.a||st.align):'left';const i=AL.findIndex(a=>a[0]===cur);applyAlign(AL[(i+1)%AL.length][0])};
-$$('#mbar [data-ms]').forEach(b=>b.onclick=()=>{const k=b.dataset.ms;$('#panel').classList.remove('open');if(msKey===k){msKey=null;$('#msheet').classList.remove('open')}else{msKey=k;msSync();$('#msheet').classList.add('open')}
-  $$('#mbar [data-ms]').forEach(x=>x.classList.toggle('on',x.dataset.ms===msKey))});
+$('#mAlign').onclick=e=>openPop('popAlign',e.currentTarget);
+$('#papersM').innerHTML=PP.map(p=>'<button class="sw" data-p="'+p[0]+'" aria-label="'+p[1]+'" title="'+p[1]+'" style="background:'+PAPER[p[0]][0]+';width:32px;height:32px"></button>').join('');
+$('#papersM').addEventListener('click',e=>{const b=e.target.closest('button');if(b){S.paper=b.dataset.p;refresh()}});
+$('#mPaper').onclick=e=>openPop('popPaper',e.currentTarget);
+$$('#mbar [data-ms]').forEach(b=>{b.addEventListener('mousedown',e=>e.preventDefault());b.onclick=()=>{const k=b.dataset.ms;if(openId==='popStep'&&msKey===k){closePops();return}msKey=k;openPop('popStep',b);msKey=k;msSync();b.classList.add('on')}});
 function msSync(){if(!msKey)return;$('#msLabel').textContent=R[msKey][0];$('#msUnit').textContent=R[msKey][1];if(document.activeElement!==$('#msNum'))$('#msNum').value=S[msKey]}
-$('#msDown').onclick=()=>{S[msKey]=clampK(msKey,S[msKey]-R[msKey][2]);refresh();msSync()};$('#msUp').onclick=()=>{S[msKey]=clampK(msKey,S[msKey]+R[msKey][2]);refresh();msSync()};
-$('#msNum').addEventListener('change',e=>{const n=parseFloat(e.target.value);if(!isNaN(n))S[msKey]=clampK(msKey,n);refresh();msSync()});
+$('#msDown').onclick=()=>{if(!msKey)return;S[msKey]=clampK(msKey,S[msKey]-R[msKey][2]);refresh();msSync()};$('#msUp').onclick=()=>{if(!msKey)return;S[msKey]=clampK(msKey,S[msKey]+R[msKey][2]);refresh();msSync()};
+$('#msNum').addEventListener('change',e=>{if(!msKey)return;const n=parseFloat(e.target.value);if(!isNaN(n))S[msKey]=clampK(msKey,n);refresh();msSync()});
+$('#msNum').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
+/* 모바일에서는 쪽 관련 도구를 편집 화면으로 옮김 */
+const MOVE=[()=>$('#ratios'),()=>$('[data-sn="margin"]').closest('.step'),()=>$('#pnBtn').parentElement,()=>$('#tools')].map(f=>{const el=f();const mark=document.createComment('slot');el.before(mark);return{el,mark}});
+function placeControls(){const m=mobile.matches,box=$('#mMore');MOVE.forEach(o=>{if(m)box.append(o.el);else o.mark.after(o.el)})}
 function fitMobile(){if(mobile.matches){S.zoom=Math.max(30,Math.floor((desk.clientWidth-24)/PW*100));applyCSS();relayout();syncUI()}}
-mobile.addEventListener('change',()=>{setView('edit');closePops();fitMobile()});
+mobile.addEventListener('change',()=>{setView('edit');closePops();placeControls();fitMobile()});
 addEventListener('resize',()=>{if(mobile.matches)fitMobile()});
-desk.addEventListener('pointerdown',()=>{if(mobile.matches){$('#panel').classList.remove('open');closePops()}});
 desk.addEventListener('mousedown',e=>{if(e.target===desk||e.target===sizer||e.target.classList.contains('pg')){e.preventDefault();ed.focus();const s=getSelection();const r=document.createRange();r.selectNodeContents(ed.lastElementChild);r.collapse(false);s.removeAllRanges();s.addRange(r)}});
 
 /* ---------- 시작 ---------- */
 (async()=>{
   for(const f of await dbAll()){try{await addFontBuf(f.name,f.buf)}catch(e){}}
-  const first=!localStorage.getItem(KEY);ed.innerHTML=SAVEDHTML?sanitize(SAVEDHTML):'';normalize();renderBubble();applyCSS();if(first&&!mobile.matches)S.zoom=Math.max(30,Math.min(100,Math.floor((desk.clientHeight-48)/geo().PH*100)));fitMobile();applyCSS();relayout();syncUI();commit();
+  const first=!localStorage.getItem(KEY);ed.innerHTML=SAVEDHTML?sanitize(SAVEDHTML):'';normalize();renderBubble();placeControls();applyCSS();if(first&&!mobile.matches)S.zoom=Math.max(30,Math.min(100,Math.floor((desk.clientHeight-48)/geo().PH*100)));fitMobile();applyCSS();relayout();syncUI();commit();
   $('#saved').innerHTML=svg('check')+'저장됨';
   document.fonts.ready.then(()=>{relayout()});
   setTimeout(relayout,600);
