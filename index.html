@@ -4,17 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>이끼네 조판기</title>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src https://cdn.jsdelivr.net data: blob:; img-src 'self' blob: data:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' https://cdn.jsdelivr.net data: blob:; img-src 'self' blob: data:; connect-src 'self' blob: data:; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231F5C3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='6' y='2' width='12' height='20' rx='2' fill='%23fff'/%3E%3Cpath d='M9.5 7h5M9.5 11h5M9.5 15h3'/%3E%3C/svg%3E">
 <style>
-/* KoPubWorld: 글꼴을 받는 동안에도 글이 보이게 (font-display:swap) */
-@font-face{font-family:'KoPubWorld Dotum';font-style:normal;font-weight:300;font-display:swap;src:local('KoPubWorldDotum'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Light.woff2) format('woff2'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Light.woff) format('woff')}
-@font-face{font-family:'KoPubWorld Dotum';font-style:normal;font-weight:400;font-display:swap;src:local('KoPubWorldDotum'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Medium.woff2) format('woff2'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Medium.woff) format('woff')}
-@font-face{font-family:'KoPubWorld Dotum';font-style:normal;font-weight:700;font-display:swap;src:local('KoPubWorldDotum'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Bold.woff2) format('woff2'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Bold.woff) format('woff')}
-@font-face{font-family:'KoPubWorld Batang';font-style:normal;font-weight:300;font-display:swap;src:local('KoPubWorldBatang'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Light.woff2) format('woff2'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Light.woff) format('woff')}
-@font-face{font-family:'KoPubWorld Batang';font-style:normal;font-weight:400;font-display:swap;src:local('KoPubWorldBatang'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Medium.woff2) format('woff2'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Medium.woff) format('woff')}
-@font-face{font-family:'KoPubWorld Batang';font-style:normal;font-weight:700;font-display:swap;src:local('KoPubWorldBatang'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Bold.woff2) format('woff2'),url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Bold.woff) format('woff')}
+/* 글꼴: 자주 쓰는 글자(한글 11172자, 영문, 문장부호)는 레포의 줄인 글꼴(fonts/, KoPubWorld 수정본이라 이름을 '이끼 바탕/돋움'으로 바꿈)
+   그 밖의 글자(한자 등)만 원본 KoPubWorld를 jsDelivr에서 필요할 때 받음. 라이선스: fonts/LICENSE.md */
+@font-face{font-family:'Ikki Batang';font-weight:300;font-display:swap;src:url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Light.woff2) format('woff2');unicode-range:U+7F-9F,U+100-200F,U+2028-202F,U+205F-218F,U+219A-245F,U+2500-259F,U+2700-2FFF,U+3040-3130,U+318F-ABFF,U+D7A4-FF00,U+FF5F-10FFFF}
+@font-face{font-family:'Ikki Batang';font-weight:300;font-display:swap;src:url(fonts/ikki-batang-300.woff2) format('woff2');unicode-range:U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-205E,U+2190-2199,U+2460-24FF,U+25A0-25FF,U+2600-26FF,U+3000-303F,U+3131-318E,U+AC00-D7A3,U+FF01-FF5E}
+@font-face{font-family:'Ikki Batang';font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Medium.woff2) format('woff2');unicode-range:U+7F-9F,U+100-200F,U+2028-202F,U+205F-218F,U+219A-245F,U+2500-259F,U+2700-2FFF,U+3040-3130,U+318F-ABFF,U+D7A4-FF00,U+FF5F-10FFFF}
+@font-face{font-family:'Ikki Batang';font-weight:400;font-display:swap;src:url(fonts/ikki-batang-400.woff2) format('woff2');unicode-range:U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-205E,U+2190-2199,U+2460-24FF,U+25A0-25FF,U+2600-26FF,U+3000-303F,U+3131-318E,U+AC00-D7A3,U+FF01-FF5E}
+@font-face{font-family:'Ikki Batang';font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Batang-Bold.woff2) format('woff2');unicode-range:U+7F-9F,U+100-200F,U+2028-202F,U+205F-218F,U+219A-245F,U+2500-259F,U+2700-2FFF,U+3040-3130,U+318F-ABFF,U+D7A4-FF00,U+FF5F-10FFFF}
+@font-face{font-family:'Ikki Batang';font-weight:700;font-display:swap;src:url(fonts/ikki-batang-700.woff2) format('woff2');unicode-range:U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-205E,U+2190-2199,U+2460-24FF,U+25A0-25FF,U+2600-26FF,U+3000-303F,U+3131-318E,U+AC00-D7A3,U+FF01-FF5E}
+@font-face{font-family:'Ikki Dotum';font-weight:300;font-display:swap;src:url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Light.woff2) format('woff2');unicode-range:U+7F-9F,U+100-200F,U+2028-202F,U+205F-218F,U+219A-245F,U+2500-259F,U+2700-2FFF,U+3040-3130,U+318F-ABFF,U+D7A4-FF00,U+FF5F-10FFFF}
+@font-face{font-family:'Ikki Dotum';font-weight:300;font-display:swap;src:url(fonts/ikki-dotum-300.woff2) format('woff2');unicode-range:U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-205E,U+2190-2199,U+2460-24FF,U+25A0-25FF,U+2600-26FF,U+3000-303F,U+3131-318E,U+AC00-D7A3,U+FF01-FF5E}
+@font-face{font-family:'Ikki Dotum';font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Medium.woff2) format('woff2');unicode-range:U+7F-9F,U+100-200F,U+2028-202F,U+205F-218F,U+219A-245F,U+2500-259F,U+2700-2FFF,U+3040-3130,U+318F-ABFF,U+D7A4-FF00,U+FF5F-10FFFF}
+@font-face{font-family:'Ikki Dotum';font-weight:400;font-display:swap;src:url(fonts/ikki-dotum-400.woff2) format('woff2');unicode-range:U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-205E,U+2190-2199,U+2460-24FF,U+25A0-25FF,U+2600-26FF,U+3000-303F,U+3131-318E,U+AC00-D7A3,U+FF01-FF5E}
+@font-face{font-family:'Ikki Dotum';font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/npm/font-kopubworld@1.0.3/fonts/KoPubWorld-Dotum-Bold.woff2) format('woff2');unicode-range:U+7F-9F,U+100-200F,U+2028-202F,U+205F-218F,U+219A-245F,U+2500-259F,U+2700-2FFF,U+3040-3130,U+318F-ABFF,U+D7A4-FF00,U+FF5F-10FFFF}
+@font-face{font-family:'Ikki Dotum';font-weight:700;font-display:swap;src:url(fonts/ikki-dotum-700.woff2) format('woff2');unicode-range:U+0020-007E,U+00A0-00FF,U+2010-2027,U+2030-205E,U+2190-2199,U+2460-24FF,U+25A0-25FF,U+2600-26FF,U+3000-303F,U+3131-318E,U+AC00-D7A3,U+FF01-FF5E}
 :root{--acc:#1F5C3F;--acc-h:#17472F;--acc-t:#E6F0EA;--ink:#18181B;--mute:#52525B;--soft:#71717A;--line:#E4E4E7;--panel:#FAFAFA;--desk:#E9E9EC}
 *{box-sizing:border-box;min-width:0}
 html,body{margin:0;height:100%}
@@ -502,7 +509,8 @@ let BOOKAUTO=false,TWS=S,BKS=bookOf(SAVEDB),MODE=SAVEDMODE==='book'||location.ha
 if(MODE==='book')S=BKS;
 const fonts=()=>[...BUILTIN_FONTS,...LOCALF.map(n=>({id:n,name:n,local:true})),...UPF.map(f=>({id:f.id,name:f.name,up:true}))];
 const fontName=id=>(fonts().find(f=>f.id===id)||{name:id}).name;
-const famCss=id=>'"'+String(id).replace(/["'\\;{}<>()]/g,'')+'","KoPubWorld Batang",serif';
+const FAMMAP={'KoPubWorld Batang':'Ikki Batang','KoPubWorld Dotum':'Ikki Dotum'};
+const famCss=id=>'"'+(FAMMAP[id]||String(id).replace(/["'\\;{}<>()]/g,''))+'","Ikki Batang",serif';
 
 const ed=$('#ed'),board=$('#board'),pagesEl=$('#pages'),sizer=$('#sizer'),desk=$('#desk');
 let PW=420,KPT=0.3528*PW/105,PK=[];const PG=28,SPG=16,PGV=24,BMM=420/148;
